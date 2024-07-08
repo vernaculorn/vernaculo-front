@@ -1,0 +1,35 @@
+'use client'
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const links = [
+  { name: 'início', href: '/' },
+  { name: 'sobre', href: '/sobre' },
+  { name: 'incursões', href: '/incursoes' },
+  { name: 'ações', href: '/acoes' },
+  { name: 'contato', href: '/contato' },
+];
+
+export default function NavLinks() {
+
+  const pathname = usePathname();
+
+  return (
+    <>
+      {links.map((link) => {
+        return (
+          <Link
+            key={link.name}
+            href={link.href}
+            className={`${
+              pathname === link.href ? 'font-bold' : ''
+            }`}
+          >
+            <p>{link.name}</p>
+          </Link>
+        );
+      })}
+    </>
+  );
+}
