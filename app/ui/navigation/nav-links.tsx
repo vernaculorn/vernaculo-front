@@ -24,7 +24,7 @@ export default function NavLinks() {
             href={link.href}
             className={`${
               pathname === link.href ? 'font-bold' : ''
-            }`}
+            } hover:text-gray-500 transition duration-300 hover:underline`}
           >
             <p>{link.name}</p>
           </Link>
