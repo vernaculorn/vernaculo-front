@@ -1,0 +1,15 @@
+
+.swiper-pagination-bullet {
+    background-color: rgb(255, 255, 255);
+    opacity: 0.5;
+    width:25px ;
+    height: 25px;
+  }
+  .swiper-pagination-bullet-active{
+    background-color: rgb(255, 255, 255);
+    opacity: 1;
+  }
+
+  .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-horizontal > .swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal{
+    bottom: 6rem;
+  }
