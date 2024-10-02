@@ -1,18 +1,31 @@
-import Carrossel from '@/app/ui/about/carrossel'
-import React from 'react'
+'use client';
+import Carrossel from '@/app/ui/about/carrossel';
+import { useSearchParams } from 'next/navigation';
+import React from 'react';
 
-export default function tipografia() {
+export default function Tipografia() {
+  const searchParams = useSearchParams();
+
+  const title = searchParams.get('title') || 'Título não disponível';
+  const coordinator = searchParams.get('coordinator') || 'Coordenador não disponível';
+  const year = searchParams.get('year') || 'Ano não disponível';
+  const place = searchParams.get('place') || 'Local não disponível';
+  const content = searchParams.get('content') || 'Conteúdo não disponível';
+  const primary_color = searchParams.get('primary_color') || '#FFFFFF';
+  const secondary_color = searchParams.get('secondary_color') || '#000000';
+  const image = searchParams.get('image') || 'Imagem não Disponível';
+
   return (
-    <div className='relative flex flex-col w-full lg:p-10 md:p-10 pt-0 bg-slate-100 gap-5'>
-      <div className='bg-[url("/images/action/imgBG1.png")] bg-no-repeat bg-center bg-cover w-full h-80 flex  relative'>
-        <div className='absolute w-full h-full bg-[#fcdf65]/70'></div>
+    <div style={{color: secondary_color}} className='relative flex flex-col w-full lg:p-10 md:p-10 pt-0 bg-slate-100 gap-5'>
+      <div style={{backgroundImage: `url(${image})`}} className=' bg-no-repeat bg-center bg-cover w-full h-80 flex  relative'>
+        <div style={{background: `${primary_color}80`}} className='absolute w-full h-full'></div>
         <div className='flex flex-col w-full h-full'>
           <div className='z-10 mt-auto w-full'>
-            <h1 className='w-96 mx-auto font-bold text-2xl text-center border-solid border-b-[#333333] border-b-[8px]'>TIPOGRAFIA VERNACULAR</h1>
+            <h1 style={{borderBottomColor: secondary_color}} className='w-96 mx-auto font-bold text-2xl text-center border-solid  border-b-[8px]'>{title}</h1>
           </div>
-          <div className='z-10 mb-auto w-96 mx-auto text-center text-[#333333]'>
-            <p>coordenadora: Profa Helena Rugai<br />
-              Natal, 2016</p>
+          <div className='z-10 mb-auto w-96 mx-auto text-center'>
+            <p>{coordinator}</p>
+            <p>{place} , {year}</p>
           </div>
         </div>
       </div>
@@ -20,36 +33,8 @@ export default function tipografia() {
         <Carrossel />
       </div>
       <div className='m-5 lg:mx-32 md:mx-10'>
-        <div className='flex flex-col p-8 border-solid border-4 border-yellow-400 w-full'>
-          <div>
-            <h1 className='m-10'>ÍNÍCIO DA PESQUISA</h1>
-            <p>O Rio Grande do Norte guarda tesouros que ainda não foram descobertos. Eles estão em
-              todas as regiões do estado, do extenso litoral à vasta zona do Sertão, nas mãos de inúmeros
-              artistas e artesãos que criam, a partir de materiais da natureza local (argila, madeira, fibras,
-              couro, pedra, areia, entre outros), objetos com diferentes formas e diversas funções
-              (utilitária, decorativa, ritualística, lúdica, poética).<br /><br />
-              São homens e mulheres que reproduzem conhecimentos e gestos ancestrais,
-              perpetuando-os de geração em geração, ou que atualizam a tradição com elementos da
-              contemporaneidade, provando a impressionante capacidade de adaptação e renovação da
-              criação popular.O Rio Grande do Norte guarda tesouros que ainda não foram descobertos.
-              Eles estão em todas as regiões do estado, do extenso litoral à vasta zona do Sertão, nas
-              mãos de inúmeros artistas e artesãos que criam, a partir de materiais da natureza local
-              (argila, madeira, fibras, couro, pedra, areia, entre outros), objetos com diferentes formas e
-              diversas funções (utilitária, decorativa, ritualística, lúdica, poética).</p></div>
-          <div>
-            <h1 className='m-10'>DESCOBERTAS NA PESQUISA</h1>
-            <p>
-              São homens e mulheres que reproduzem conhecimentos e gestos ancestrais,
-              perpetuando-os de geração em geração, ou que atualizam a tradição com elementos da
-              contemporaneidade, provando a impressionante capacidade de adaptação e renovação da
-              criação popular.<br /><br />
-              O Rio Grande do Norte guarda tesouros que ainda não foram descobertos. Eles estão em
-              todas as regiões do estado, do extenso litoral à vasta zona do Sertão, nas mãos de inúmeros
-              artistas e artesãos que criam, a partir de materiais da natureza local (argila, madeira, fibras,
-              couro, pedra, areia, entre outros), objetos com diferentes formas e diversas funções
-              (utilitária, decorativa, ritualística, lúdica, poética).
-            </p>
-          </div>
+        <div style={{borderColor: secondary_color}} className='flex flex-col p-8 border-solid border-4 w-full'>
+          <p dangerouslySetInnerHTML={{ __html: content }}></p>
         </div>
       </div>
 

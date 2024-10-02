@@ -1,38 +1,63 @@
+
 import Link from 'next/link'
 import React from 'react'
 
-const LineComponent1 = () => { 
+
+// Tipagem das Ações
+interface Acao {
+  title: string;
+  coordinator: string;
+  year: string;
+  place: string;
+  content: string;
+  primary_color: string;
+  secondary_color: string;
+  image: string;
+  gallery: string[]
+}
+
+const LineComponent1: React.FC<{ acao: Acao }> = ({ acao }) => {
+
   return (
     <div className='flex flex-col lg:flex-row justify-center w-full px-0 lg:px-5'>
 
       {/* PRIMEIRA BOX (TITLE) */}
-      <div className='bg-[url("/images/action/imgBG1.png")] bg-no-repeat bg-center bg-cover w-full lg:w-100 lg:min-h-96 max-h-full flex relative'>
-        <div className='absolute w-full h-full bg-[#fcdf65]/70'></div>
+      <div style={{ backgroundImage: `url(${acao.image})` }} className='bg-no-repeat bg-center bg-cover w-full lg:w-100 lg:min-h-96 max-h-full flex relative'>
+        <div style={{ background: `${acao.primary_color}80` }} className='absolute w-full h-full'></div>
         <div className='flex flex-col w-full h-full my-5 md:my-7'>
           <div className='z-10 mt-auto w-full'>
-            <h1 className='w-96 mx-auto font-bold text-2xl text-center border-solid border-b-[#333333] border-b-[8px]'>TIPOGRAFIA VERNACULAR</h1>
+            <h1 style={{ borderBottomColor: acao.secondary_color, color: acao.secondary_color }} className='w-96 mx-auto font-bold text-2xl text-center border-solid border-b-[8px]'>{acao.title}</h1>
           </div>
-          <div className='z-10 mb-auto w-96 mx-auto text-center text-[#333333]'>
-            <p>coordenadora: Profa Helena Rugai<br />
-              Natal, 2016</p>
+          <div style={{ color: acao.secondary_color }} className='z-10 mb-auto w-96 mx-auto text-center'>
+            <p>{acao.coordinator}</p>
+            <p>{acao.place} , {acao.year}</p>
           </div>
         </div>
       </div>
 
       {/* SEGUNDA BOX (CONTENT) */}
-      <div className='flex flex-col relative overflow-hidden text-xl justify-center items-center p-10 [&>div]:p-0 lg:mx-2 bg-[#fcdf65] w-full lg:w-[50rem] lg:min-h-96 h-full'>
-        <p className='w-full'>O Rio Grande do Norte guarda tesouros que ainda não foram descobertos. Eles estão em
-          todas as regiões do estado, do extenso litoral à vasta zona do Sertão, nas mãos de inúmeros
-          artistas e artesãos que criam, a partir de materiais da natureza local (argila, madeira, fibras,
-          couro, pedra, areia, entre outros), objetos com diferentes formas e diversas funções
-          (utilitária, decorativa, ritualística, lúdica, poética).<br />
-          <br />
-          São homens e mulheres que reproduzem conhecimentos e gestos ancestrais,
-          perpetuando-os de geração em geração, ou que atualizam a tradição com elementos da
-          contemporaneidade, provando a impressionante capacidade de adaptação e renovação da
-          criação popular.</p>
+      <div style={{ background: acao.primary_color }} className='flex flex-col relative overflow-hidden text-xl justify-center items-center p-10 [&>div]:p-0 lg:mx-2 w-full lg:w-[50rem] lg:min-h-96 h-full'>
+        <p className='w-full' dangerouslySetInnerHTML={{ __html: acao.content }}></p>
         <div className='p-1 w-full justify-end flex bottom-0'>
-          <Link  className='w-40 text-center bg-transparent border-solid border-4 border-[#333333] text-[#333333]' href={'/acoes/page1'}>Conhecer +</Link>
+          <Link
+            style={{ borderColor: acao.secondary_color, color: acao.secondary_color }}
+            className={`w-40 text-center bg-transparent border-solid border-4 `}
+            //  Link com parâmetros para page1 dinâmica
+            href={{
+              pathname: '/acoes/page1',
+              query: {
+                title: acao.title,
+                coordinator: acao.coordinator,
+                year: acao.year,
+                place: acao.place,
+                content: acao.content,
+                primary_color: acao.primary_color,
+                secondary_color: acao.secondary_color,
+                image: acao.image,
+                gallery: acao.gallery,
+              },
+            }}
+          >Conhecer +</Link>
         </div>
       </div>
     </div>

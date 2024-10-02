@@ -13,7 +13,7 @@ export default function Incursion() {
     <div className='flex gap-5 relative justify-center bg-no-repeat min-h-screen h-full w-full bg-center bg-cover bg-[url("/images/action/imgBG3.png")]'>
       <div className=' h-full absolute bg-cover bg-no-repeat bg-[url("/images/incursion/MascaraBG1.png")]'></div>
 
-      <div className='gap-2 h-full px-2 lg:px-20 md:px-5 flex flex-col lg:flex-row'>
+      <div className='gap-2 h-full px-2 lg:px-5 md:px-5 flex flex-col lg:flex-row'>
         <div className='lg:max-w-[30rem] py-5 w-full'>
 
           {/* PRIMEIRA BOX CONTENDO MAPA E LISTAS */}
