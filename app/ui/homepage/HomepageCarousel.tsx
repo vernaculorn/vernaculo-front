@@ -20,7 +20,7 @@ const HomepageCarousel = () => {
     ]
     return (
         <div className="w-full h-full">
-            <div className="relative flex flex-col w-full h-[1000px] max-h-[1000px] overflow-hidden">
+            <div className="relative flex flex-col w-full overflow-hidden">
 
                 {/* CARROSSEL HOME PAGE */}
                 <div className="relative">
@@ -33,12 +33,13 @@ const HomepageCarousel = () => {
                     >
                         {data.map((bg) => (
                             <SwiperSlide key={bg.id}>
-                                <Image src={bg.image} className=" w-full min-h-[1000px] max-h-[1000px] object-cover object-center" alt="backgroundSlider" width={1022} height={657} />
+                                <div style={{backgroundImage: `url(${bg.image})`}} className='w-full h-screen bg-cover bg-center'>
+                                </div>
                             </SwiperSlide>
                         ))}
                     </Swiper>
                     <div className="">
-                        <SVGBorder2 className="pointer-events-none absolute w-full z-20 bottom-2 md:bottom-[-2rem] lg:bottom-[-8rem] fill-current text-carrossel" />
+                        <SVGBorder2 className=" pointer-events-none absolute z-10 h-96 lg:h-auto lg:w-full bottom-[-8rem] fill-current text-carrossel" />
                     </div>
                     <div className="">
                         <SVGBorder1 className=" pointer-events-none absolute bottom-0 z-20 w-full mt-10 fill-current text-white" />
