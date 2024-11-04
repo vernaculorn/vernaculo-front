@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "./ui/navigation/navbar";
 import Footer from "./ui/footer";
 import { inter } from "./ui/fonts";
+import { ReactDOM } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
