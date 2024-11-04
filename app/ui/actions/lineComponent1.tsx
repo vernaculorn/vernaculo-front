@@ -44,7 +44,7 @@ const LineComponent1: React.FC<{ acao: Acao }> = ({ acao }) => {
             className={`w-40 text-center bg-transparent border-solid border-4 `}
             //  Link com parâmetros para page1 dinâmica
             href={{
-              pathname: '/acoes/page1',
+              pathname: '/acoes/1',
               query: {
                 title: acao.title,
                 coordinator: acao.coordinator,

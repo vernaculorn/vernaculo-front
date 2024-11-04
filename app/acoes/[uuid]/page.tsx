@@ -1,9 +1,11 @@
 'use client';
+
 import Carrossel from '@/app/ui/about/carrossel';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 
 export default function Tipografia() {
+
   const searchParams = useSearchParams();
 
   const title = searchParams.get('title') || 'Título não disponível';
