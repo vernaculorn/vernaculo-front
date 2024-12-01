@@ -1,7 +1,5 @@
 import React from 'react'
 import Image from "next/image";
-import { leagueGothic } from '../fonts';
-
 
 const MoreInformation = () => {
     return (

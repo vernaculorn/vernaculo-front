@@ -9,24 +9,12 @@ import 'swiper/css/navigation'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-const Carrossel = () => {
+type CarrosselProps = {
+  images: { src: string, id: number }[]
+}
+
+const Carrossel = ({ images }: CarrosselProps) => {
   const [carouselSize, setcarouselSize] = useState(3)
-
-  const images = [
-    { src: '/images/about/img2.png', id: 1 },
-    { src: '/images/about/img3.png', id: 2 },
-    { src: '/images/about/img4.png', id: 3 },
-
-    // IMAGES EXTRAS
-    { src: '/images/about/img2.png', id: 4 },
-    { src: '/images/about/img3.png', id: 5 },
-    { src: '/images/about/img4.png', id: 6 },
-    { src: '/images/about/img2.png', id: 7 },
-    { src: '/images/about/img3.png', id: 8 },
-    { src: '/images/about/img4.png', id: 9 },
-  ]
-
- // RESPONSIVIDADE EM CARROSSEL
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth < 720) setcarouselSize(1)

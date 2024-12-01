@@ -7,7 +7,6 @@ register()
 import 'swiper/css'
 import 'swiper/css/navigation'
 import './carrossel.css'
-
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 const Carrossel = () => {
@@ -26,19 +25,17 @@ const Carrossel = () => {
     { src: '/images/about/img4.png', id: 9 },
   ]
 
-
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth > 720){
         setcarouselSize(3)
-    }
-      else if(window.innerWidth <= 640){
+      } else if(window.innerWidth <= 640){
         setcarouselSize(1)
-    }else{
-        setcarouselSize(2)
-        
+      } else{
+        setcarouselSize(2)  
+      }
     }
-    }
+    
     handleResize()
     window.addEventListener("resize", handleResize)
     return () => {

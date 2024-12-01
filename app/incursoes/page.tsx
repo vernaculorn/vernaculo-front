@@ -1,35 +1,135 @@
 'use client'
-import React, { useState } from 'react'
-import Area1 from '../ui/incursion/Area1'
-import Area2 from '../ui/incursion/Area2'
+import React, { useEffect, useState } from 'react'
+import SVGMap from '../ui/incursion/SVGMap'
+import { Material } from '../types/material'
+import { Craftsman } from '../types/craftsman'
+import { leagueGothic } from '../ui/fonts'
+import { FileProps } from '../types/file'
+import Image from 'next/image'
+import { Region } from '../types/region'
 
+type ItemProps = {
+  name: string,
+  slug: string,
+  content: string,
+  image: FileProps;
+  files: FileProps[];
+}
 
 export default function Incursion() {
+  const [materials, setMaterials] = useState<Material[]>([])
+  const [craftsmans, setCraftsmans] = useState<Craftsman[]>([])
+  const [regions, setRegions] = useState<Region[]>([])
+  const [item, setItem] = useState<ItemProps | null>(null)
+  const [region, setRegion] = useState<Region|undefined>(undefined)
+  const [tab, setTab] = useState(1)
 
-  // STATE ID ALTERADO NO SVG PARA REQUISIÇÕES
-  const [idMap, setIdMap] = useState<number>(0)
+  const getMaterials = async () => {
+    let url = region ? '/materials?region=' + region.slug : '/materials'
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + url)
+    const data = await response.json()
+    setMaterials(data.filter((material: Material) => material.slug != 'materiais'))
+  }
+
+  const getCraftsmans = async () => {
+    let url = region ? '/craftsmans?region=' + region.slug : '/craftsmans'
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + url)
+    const data = await response.json()
+    setCraftsmans(data.filter((craftsman: Craftsman) => craftsman.slug != 'artifices'))
+  }
+
+  const getRegions = async () => {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/regions')
+    const data = await response.json()
+    setRegions(data)
+  }
+
+  const getItem = async (slug: string, route: string) => {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/' + route + '/' + slug)
+    const data = await response.json()
+
+    console.log(data)
+
+    setItem(data)
+  }
+
+  useEffect(() => {
+    getMaterials()
+    getCraftsmans()
+    getRegions()
+  }, [region])
+
+  const materialList = (<div className='min-w-full mx-auto my-5 relative' onClick={() => getItem('materiais', 'materials')}>
+    <div className='p-2 w-full bg-[#C5C5C5] rounded-t'>
+      <h1 className={leagueGothic.className + `text-lg`}>Materiais</h1>
+    </div>
+    <div className='min-w-full h-[100px] bg-[black/70] rounded-b border-solid border-[1px] border-slate-400 overflow-hidden overflow-y-auto'>
+      <ul className='px-2 text-white overflow-hidden overflow-y-auto list-inside list-image-checkmark'>
+        {materials.map((material) => (
+          <li className={`hover:bg-slate-600/50 cursor-pointer ${item?.slug == material.slug ? 'bg-slate-600/50' : ''}`}
+            key={material.slug}
+            onClick={() => getItem(material.slug, 'materials')}>{material.name}</li>
+        ))}
+      </ul>
+    </div>
+  </div>)
+
+  const craftsmanList = (<div className='min-w-full mx-auto my-5 relative' onClick={() => getItem('artifices', 'craftsmans')}>
+    <div className='p-2 w-full bg-[#C5C5C5] rounded-t'>
+      <h1 className={leagueGothic.className + `text-lg`}>Artífices</h1>
+    </div>
+    <div className='min-w-full h-[100px] bg-[black/70] rounded-b border-solid border-[1px] border-slate-400 overflow-hidden overflow-y-auto'>
+      <ul className='px-2 text-white overflow-hidden overflow-y-auto list-inside list-image-checkmark'>
+        {craftsmans.map((craftsman) => (
+          <li className={`hover:bg-slate-600/50 cursor-pointer ${item?.slug == craftsman.slug ? 'bg-slate-600/50' : ''}`}
+            key={craftsman.slug}
+            onClick={() => getItem(craftsman.slug, 'craftsmans')}>{craftsman.name}</li>
+        ))}
+      </ul>
+    </div>
+  </div>)
 
   return (
-    <div className='flex gap-5 relative justify-center bg-no-repeat min-h-screen h-full w-full bg-center bg-cover bg-[url("/images/action/imgBG3.png")]'>
-      <div className=' h-full absolute bg-cover bg-no-repeat bg-[url("/images/incursion/MascaraBG1.png")]'></div>
-
-      <div className='gap-2 h-full px-2 lg:px-5 md:px-5 flex flex-col lg:flex-row'>
-        <div className='lg:max-w-[30rem] py-5 w-full'>
-
-          {/* PRIMEIRA BOX CONTENDO MAPA E LISTAS */}
-          <div className='relative bg-black/50 flex flex-col h-full'>
-            <Area1 idMap={idMap} setIdMap={setIdMap}/>
+    <div className='flex gap-5 relative justify-center bg-no-repeat min-h-screen w-full bg-center bg-cover bg-[url("/images/action/imgBG3.png")]'>
+      <div className='h-full absolute bg-cover bg-no-repeat bg-[url("/images/incursion/MascaraBG1.png")]'></div>
+      <div className='max-w-[1140px] w-full gap-2 h-[700px] px-3 lg:px-5 md:px-5 flex flex-col lg:flex-row'>
+        <div className='lg:max-w-[40%] py-5 w-full'>
+          <div className='relative bg-black/50 flex flex-col h-[full]'>
+            <div className='relative border-2 border-slate-400 p-5 py-2 bg-black/50 flex flex-col  md:min-w-[40rem] lg:min-w-96 w-full h-full'>
+              <div>
+                <div className='w-full'>{materialList}</div>
+                <div className='w-full'>{craftsmanList}</div>
+                <div className='mb-auto'><SVGMap region={region} regions={regions} setRegion={setRegion} getItem={getItem} /></div>
+              </div>
+            </div>
           </div>
-          {/* |||||||||||||||||||| */}
         </div>
 
-          {/* SEGUNDA BOX VIDEO, SOBRE E GALERIA */}
-        <div className='w-full mx-auto py-5'>
-          <Area2 idMap={idMap} setIdMap={setIdMap} />
+        <div className='w-full mx-auto py-5 h-[800px]'>
+          <div className='w-full bg-[#C5C5C5] rounded-lg md:p-8 p-3'>
+            <div className='p-2 w-full bg-[#C5C5C5] rounded-t h-[250px]'>
+              {item?.image && <Image src={item.image.file_url} alt={item.name} width={0} height={0} sizes="100vw" style={{width: '100%', height: 'auto', maxHeight: '250px'}} />}
+            </div>
+            
+            <div className='relative text-white h-[400px]'>
+              <div className='w-full my-10 flex gap-2'>
+                  <button onClick={() => setTab(1)} className={`text-[#D2CFCC] border-solid w-24 border-t-4 border-l-2 pt-1 ${tab == 1 ? 'border-slate-700 text-slate-700' : 'border-slate-500/50'}`}>SOBRE</button>
+                  <button onClick={() => setTab(2)} className={`text-[#D2CFCC] border-solid w-24 border-t-4 border-l-2 pt-1 ${tab == 2 ? 'border-slate-700 text-slate-700' : 'border-slate-500/50'}`}>GALERIA</button>
+              </div>
+              <div className='flex flex-col my-16'>
+                  <div className='w-full text-black overflow-y-scroll h-[320px]'>
+                      {item?.content && <p dangerouslySetInnerHTML={{ __html: item?.content }} className={`overflow-auto ${tab == 1 ? '' : 'hidden'}`}></p>}
+                  </div>
+                  <div className={`flex flex-wrap gap-4 w-full ${tab == 2 ? '' : 'hidden'}`}>
+                      {item?.files.map((image, index) => (
+                          <div key={index} style={{backgroundImage: `url(${image.file_url})`}} className='w-28 h-28 bg-cover bg-center flex bg-slate-600/25'></div>
+                      ))}
+                  </div>
+              </div>
+            </div>
+          </div>
         </div>
-          {/* |||||||||||||||||||| */}
       </div>
-
     </div>
   )
 }
