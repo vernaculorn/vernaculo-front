@@ -13,8 +13,9 @@ type ItemProps = {
   name: string,
   slug: string,
   type: string,
-  content: string,
+  video?: string,
   image: FileProps;
+  content: string,
   files: FileProps[];
 }
 
@@ -98,8 +99,9 @@ export default function Incursion() {
       name: data.name,
       slug: data.slug,
       type: itemType,
-      content: data.content,
+      video: data.video,
       image: data.image,
+      content: data.content,
       files: data.files
     })
   }
@@ -145,24 +147,30 @@ export default function Incursion() {
 
   return (
     <div className='flex gap-5 relative justify-center bg-no-repeat min-h-screen w-full bg-center bg-cover bg-[url("/images/action/imgBG3.png")]'>
-      <div className='h-full absolute bg-cover bg-no-repeat bg-[url("/images/incursion/MascaraBG1.png")]'></div>
-      <div className='max-w-[1140px] w-full gap-2 h-[700px] px-3 lg:px-5 md:px-5 flex flex-col lg:flex-row'>
-        <div className='lg:max-w-[40%] py-5 w-full'>
-          <div className='relative bg-black/50 flex flex-col h-[full]'>
-            <div className='relative border-2 border-slate-400 p-5 py-2 bg-black/50 flex flex-col  md:min-w-[40rem] lg:min-w-96 w-full h-full'>
-              <div>
-                <div className='w-full'>{materialList}</div>
-                <div className='w-full'>{craftsmanList}</div>
-                <div className='mb-auto'><SVGMap regions={regions} getItem={getItem} selectedRegions={selectedRegions} setSelectedRegions={setSelectedRegions} setRegion={setRegion} /></div>
-              </div>
-            </div>
+      <div className='max-w-[1140px] w-full gap-2 h-[745px] flex flex-col lg:flex-row'>
+        <div className='lg:max-w-[40%] py-5 w-full p-5 rounded-lg'>
+          <div className='w-full h-full bg-black/70 p-5 rounded-lg'>
+            <div className='w-full'>{materialList}</div>
+            <div className='w-full'>{craftsmanList}</div>
+            <div className='mb-auto'><SVGMap regions={regions} getItem={getItem} selectedRegions={selectedRegions} setSelectedRegions={setSelectedRegions} setRegion={setRegion} /></div>
           </div>
         </div>
 
-        <div className='w-full mx-auto py-5 flex-1'>
+        <div className='max-w-[60%] w-full py-5'>
           <div className='w-full bg-[#C5C5C5] rounded-lg md:p-8 p-3'>
-            <div className='p-2 w-full bg-[#C5C5C5] rounded-t h-[250px]'>
-              {item?.image && <Image src={item.image.file_url} alt={item.name} width={0} height={0} sizes="100vw" style={{width: '100%', height: 'auto', maxHeight: '250px'}} />}
+            <div className='p-2 w-full bg-[#C5C5C5] rounded-t h-[220px]'>
+              {
+                ((item?.video != undefined) && (item?.video != '') && (item?.video != null)) ? (
+                  <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URLSearchParams(new URL(item.video).search).get('v')}`}
+                    title="Antonio Celso: O som que nasce da madeira"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen></iframe>
+                  ) : (
+                  item?.image && <Image src={item.image.file_url} alt={item.name} width={0} height={0} sizes="100vw" style={{width: '100%', height: 'auto', maxHeight: '250px'}} />
+                )
+              }
             </div>
             
             <div className='relative text-white flex-1'>
@@ -170,8 +178,8 @@ export default function Incursion() {
                   <button onClick={() => setTab(1)} className={`text-[#D2CFCC] border-solid w-24 border-t-4 border-l-2 pt-1 ${tab == 1 ? 'border-slate-700 text-slate-700' : 'border-slate-500/50'}`}>SOBRE</button>
                   <button onClick={() => setTab(2)} className={`text-[#D2CFCC] border-solid w-24 border-t-4 border-l-2 pt-1 ${tab == 2 ? 'border-slate-700 text-slate-700' : 'border-slate-500/50'}`}>GALERIA</button>
               </div>
-              <div className='flex flex-col my-16'>
-                  <div className={`w-full text-black overflow-y-scroll h-[320px] ${tab == 1 ? '' : 'hidden'}`}>
+              <div className='flex flex-col my-16 h-[220px]'>
+                  <div className={`w-full text-black overflow-y-scroll ${tab == 1 ? '' : 'hidden'}`}>
                       {item?.content && <p dangerouslySetInnerHTML={{ __html: item?.content }} className="overflow-auto"></p>}
                   </div>
                   <div className={`flex flex-wrap gap-4 w-full ${tab == 2 ? '' : 'hidden'}`}>
