@@ -58,7 +58,7 @@ export default function Actions() {
     return (
         <div className='bg-stone-200 top-0 left-0 flex flex-col relative'>
             <div className="mx-auto justify-center w-full px-10 md:px-24 lg:px-80">
-                <p className=" text-center">Encontre aqui conteúdos diversos sobre a arte e o artefato popular,
+                <p className=" text-center pt-3">Encontre aqui conteúdos diversos sobre a arte e o artefato popular,
                     como: ações do Projeto Vernáculo, reflexões sobre temas tratados
                     no âmbito do projeto, notícias relacionadas a esses temas,
                     resenhas de publicações, entre outros.</p>
