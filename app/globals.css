@@ -33,3 +33,11 @@ body {
 }
 
 
+@media (min-width: 1024px) {
+  main {
+    background-color: #211a1a;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+

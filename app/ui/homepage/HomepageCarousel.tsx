@@ -14,9 +14,9 @@ import SVGBorder1 from '@/app/icons/SVGBorder1';
 
 const HomepageCarousel = () => {
     const data = [
-        { id: 1, image: '/images/homepage/1.jpg' },
-        { id: 2, image: '/images/action/ImgBG1.png' },
-        { id: 3, image: '/images/action/ImgBG3.png' },
+        { id: 1, image: '/images/homepage/1.jpg', title: 'TRABALHO COM COURO - ZONA DO SERTÃO' },
+        { id: 2, image: '/images/action/ImgBG1.png', title: 'TRABALHO COM COURO - ZONA DO SERTÃO' },
+        { id: 3, image: '/images/action/ImgBG3.png', title: 'TRABALHO COM COURO - ZONA DO SERTÃO' },
     ]
     return (
         <div className="w-full h-full">
@@ -33,7 +33,10 @@ const HomepageCarousel = () => {
                     >
                         {data.map((bg) => (
                             <SwiperSlide key={bg.id}>
-                                <div style={{backgroundImage: `url(${bg.image})`}} className='w-full h-screen bg-cover bg-center'>
+                                <div style={{backgroundImage: `url(${bg.image})`}} className='w-full h-screen bg-cover bg-center relative'>
+                                    <div className="absolute bottom-[200px] md:bottom-[200px] lg:bottom-[400px] right-10 text-white font-bold text-3xl">
+                                        {bg.title}
+                                    </div>
                                 </div>
                             </SwiperSlide>
                         ))}
