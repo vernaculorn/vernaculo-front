@@ -18,9 +18,9 @@ export default function Navbar() {
                         </div>
 
                         <div className="flex items-center w-full gap-4 text-lg">
-                            <div className="mx-auto">
+                            {/* <div className="mx-auto">
                                 <Search placeholder="Pesquisar" />
-                            </div>
+                            </div> */}
 
                             <div className="max-h-8 w-full flex justify-end gap-2">
                                 <a className="min-w-8 max-w-8 hover:" href="#"><Image src="/icons/email.png" alt="User" width={114} height={114} /></a>
