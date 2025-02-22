@@ -6,7 +6,7 @@ import MoreInformation from "../ui/about/MoreInformation";
 import SVGBorder1 from "../icons/SVGBorder1";
 
 export default function About() {
-    const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/images/about/`;
+    const baseUrl = `/images/about/`;
     const images = [
         { src: `${baseUrl}img2.png`, id: 1 },
         { src: `${baseUrl}img3.png`, id: 2 },
@@ -58,9 +58,9 @@ export default function About() {
                 <Carrossel images={images} />
             </div>
 
-            <div className="relative z-10">
+            {/* <div className="relative z-10">
                 <MoreInformation />
-            </div>
+            </div> */}
         </div>
     );
 }

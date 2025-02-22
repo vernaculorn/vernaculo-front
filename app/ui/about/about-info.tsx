@@ -29,19 +29,19 @@ export default function AboutInfo() {
                     <p className="text-white text-[8px] tracking-wide font-semi">PRESERVAÇÃO</p>
                     <span className={`w-[4px] bg-[#FFD700] absolute transition-all duration-300 ${(activeCardId === 1) ? 'h-[20px] bottom-[-20px]' : 'h-[0px] bottom-0'}`}></span>
                 </div>
-                <hr className="w-[15px] h-[4px] bg-[#FFFFFF]" />
+                <hr className="w-[60px] h-[4px] bg-[#FFFFFF]" />
                 <div onClick={() => handleActivation(2)} className={`flex flex-col cursor-pointer justify-center items-center gap-4 border-4 p-4 rounded-full w-20 h-20 transition-all duration-300 ${(activeCardId === 2) ? activeClasses["active-top"] : ''} relative`}>
                     <Image src="/icons/luminaria.png" className="" alt="Logo" width={18} height={18} />
                     <p className="text-white text-[8px] tracking-wide font-semi">ESTUDO</p>
                     <span className={`w-[4px] bg-[#FFD700] absolute transition-all duration-300 ${(activeCardId === 2) ? 'h-[20px] bottom-[-20px]' : 'h-[0] bottom-0'}`}></span>
                 </div>
-                <hr className="w-[15px] h-[4px] bg-[#FFFFFF]" />
+                <hr className="w-[60px] h-[4px] bg-[#FFFFFF]" />
                 <div onClick={() => handleActivation(3)} className={`flex flex-col cursor-pointer justify-center items-center gap-4 border-4 p-4 rounded-full w-20 h-20 transition-all duration-300 ${(activeCardId === 3) ? activeClasses["active-top"] : ''} relative`}>
                     <Image src="/icons/megafone.png" className="" alt="Logo" width={18} height={18} />
                     <p className="text-white text-[8px] tracking-wide font-semi">DIVULGAÇÃO</p>
                     <span className={`w-[4px] bg-[#FFD700] absolute transition-all duration-300 ${(activeCardId === 3) ? 'h-[20px] bottom-[-20px]' : 'h-[0] bottom-0'}`}></span>
                 </div>
-                <hr className="w-[15px] h-[4px] bg-[#FFFFFF]" />
+                <hr className="w-[60px] h-[4px] bg-[#FFFFFF]" />
                 <div onClick={() => handleActivation(4)} className={`flex flex-col cursor-pointer justify-center items-center gap-4 border-4 p-4 rounded-full w-20 h-20 transition-all duration-300 ${(activeCardId === 4) ? activeClasses["active-right"] : ''} relative`}>
                     <Image src="/icons/rede-pessoas.png" className="" alt="Logo" width={18} height={18} />
                     <p className="text-white text-[8px] tracking-wide font-semi">PROMOÇÃO</p>
@@ -56,19 +56,19 @@ export default function AboutInfo() {
                     <p className="text-white text-[16px] tracking-wide font-semi">PRESERVAÇÃO</p>
                     <span className={`w-[4px] bg-[#FFD700] absolute transition-all duration-300 ${activeCardId === 1 ? 'h-[20px] bottom-[-20px]' : 'h-[0] bottom-0'}`}></span>
                 </div>
-                <hr className="w-[15px] h-[4px] bg-[#FFFFFF]" />
+                <hr className="w-[60px] h-[4px] bg-[#FFFFFF]" />
                 <div onClick={() => handleActivation(2)} className={`flex flex-col cursor-pointer justify-center items-center gap-4 border-4 p-4 rounded-full w-36 h-36 transition-all duration-300 ${activeCardId === 2 ? activeClasses["active-top"] : ''} relative`}>
                     <Image src="/icons/luminaria.png" className="" alt="Logo" width={26} height={26} />
                     <p className="text-white text-[16px] tracking-wide font-semi">ESTUDO</p>
                     <span className={`w-[4px] bg-[#FFD700] absolute transition-all duration-300 ${activeCardId === 2 ? 'h-[20px] bottom-[-20px]' : 'h-[0] bottom-0'}`}></span>
                 </div>
-                <hr className="w-[15px] h-[4px] bg-[#FFFFFF]" />
+                <hr className="w-[60px] h-[4px] bg-[#FFFFFF]" />
                 <div onClick={() => handleActivation(3)} className={`flex flex-col cursor-pointer justify-center items-center gap-4 border-4 p-4 rounded-full w-36 h-36 transition-all duration-300 ${activeCardId === 3 ? activeClasses["active-top"] : ''} relative`}>
                     <Image src="/icons/megafone.png" className="" alt="Logo" width={26} height={26} />
                     <p className="text-white text-[16px] tracking-wide font-semi">DIVULGAÇÃO</p>
                     <span className={`w-[4px] bg-[#FFD700] absolute transition-all duration-300 ${activeCardId === 3 ? 'h-[20px] bottom-[-20px]' : 'h-[0] bottom-0'}`}></span>
                 </div>
-                <hr className="w-[15px] h-[4px] bg-[#FFFFFF]" />
+                <hr className="w-[60px] h-[4px] bg-[#FFFFFF]" />
                 <div onClick={() => handleActivation(4)} className={`flex flex-col cursor-pointer justify-center items-center gap-4 border-4 p-4 rounded-full w-36 h-36 transition-all duration-300 ${activeCardId === 4 ? activeClasses["active-right"] : ''} relative`}>
                     <Image src="/icons/rede-pessoas.png" className="" alt="Logo" width={26} height={26} />
                     <p className="text-white text-[16px] tracking-wide font-semi">PROMOÇÃO</p>
