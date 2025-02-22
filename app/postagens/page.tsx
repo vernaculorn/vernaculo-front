@@ -57,13 +57,13 @@ export default function Actions() {
 
     return (
         <div className='bg-stone-200 top-0 left-0 flex flex-col relative'>
-            <div className="mx-auto justify-center w-full px-10 md:px-24 lg:px-80">
-                <p className=" text-center pt-8">Encontre aqui conteúdos diversos sobre a arte e o artefato popular,
+            <div className="mx-auto justify-center w-full px-10 md:px-24 lg:px-40">
+                <p className="text-center pt-8 text-base md:text-xl">Encontre aqui conteúdos diversos sobre a arte e o artefato popular,
                     como: ações do Projeto Vernáculo, reflexões sobre temas tratados
                     no âmbito do projeto, notícias relacionadas a esses temas,
                     resenhas de publicações, entre outros.</p>
             </div>
-            <div className="flex flex-col my-32 gap-5">
+            <div className="flex flex-col my-8 gap-5">
                 {actions?.data?.map((action, index) => (
                     <div key={index} className="relative"><ActionCard action={action} /></div>
                 ))}

@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 const links = [
   { name: 'sobre', href: '/sobre' },
   { name: 'incursões', href: '/incursoes' },
-  { name: 'ações', href: '/acoes' },
-  { name: 'contato', href: '/contato' },
+  { name: 'postagens', href: '/postagens' },
+  // { name: 'contato', href: '/contato' },
 ];
 
 export default function NavLinks() {
@@ -22,7 +22,7 @@ export default function NavLinks() {
             key={link.name}
             href={link.href}
             className={`${
-              pathname === link.href ? 'font-bold' : ''
+              pathname.startsWith(link.href) ? 'font-bold' : ''
             } hover:text-gray-500 transition duration-300 hover:underline`}
           >
             <p>{link.name}</p>

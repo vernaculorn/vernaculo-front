@@ -25,7 +25,7 @@ const ActionCard: React.FC<{ action: Action }> = ({ action }) => {
           <Link
             style={{ borderColor: action.secondary_color, color: action.secondary_color }}
             className={`w-40 text-center bg-transparent border-solid border-4 `}
-            href={`/acoes/${action.slug}`}
+            href={`/postagens/${action.slug}`}
           >Conhecer +</Link>
         </div>
       </div>
