@@ -38,7 +38,14 @@ const Carrossel = ({ images }: CarrosselProps) => {
       >
         {images.map((bg) => (
           <SwiperSlide key={bg.id}>
-            <Image src={bg.src} className=" w-full min-h-[200px] max-h-[200px] md:min-h-[300px] md:max-h-[300px] lg:min-h-[400px] lg:max-h-[400px]  object-cover object-center" alt="backgroundSlider" width={1022} height={657} />
+            <Image 
+              src={bg.src} 
+              className=" w-full min-h-[200px] max-h-[200px] md:min-h-[300px] md:max-h-[300px] lg:min-h-[400px] lg:max-h-[400px]  object-cover object-center" 
+              alt="backgroundSlider" 
+              width={1022} 
+              height={657} 
+              unoptimized 
+            />
           </SwiperSlide>
         ))}
       </Swiper>
