@@ -57,11 +57,11 @@ export default function Actions() {
 
     return (
         <div className='bg-stone-200 top-0 left-0 flex flex-col relative'>
-            <div className=" text-center font-bold text-4xl mt-20 mb-11">OUTRAS AÇÕES</div>
             <div className="mx-auto justify-center w-full px-10 md:px-24 lg:px-80">
-                <p className=" text-center">O Rio Grande do Norte guarda tesouros que ainda não foram descobertos. Eles estão em
-                    todas as regiões do estado, do extenso litoral à vasta zona do Sertão, nas mãos de
-                    inúmeros artistas e artesãos que criam, a partir de materiais da natureza local.</p>
+                <p className=" text-center">Encontre aqui conteúdos diversos sobre a arte e o artefato popular,
+                    como: ações do Projeto Vernáculo, reflexões sobre temas tratados
+                    no âmbito do projeto, notícias relacionadas a esses temas,
+                    resenhas de publicações, entre outros.</p>
             </div>
             <div className="flex flex-col my-32 gap-5">
                 {actions?.data?.map((action, index) => (
