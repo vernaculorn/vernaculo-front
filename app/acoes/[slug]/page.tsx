@@ -34,7 +34,7 @@ export default function Tipografia({ params }: { params: { slug: string } }) {
         </div>
         <div className='mx-2 md:mx-0 lg:mx-0'>
           {(action?.files && action?.files.length > 0)
-            ? <Carrossel images={action?.files.map((file, index) => ({src: file?.file_url, id: index}))} />
+            ? <Carrossel images={action?.files?.map((file) => ({src: file?.file_url, id: file?.id}))} />
             : <div className='flex flex-col p-8 border-solid border-4 w-full'>
                 <p>Este projeto não possui imagens</p>
               </div>
