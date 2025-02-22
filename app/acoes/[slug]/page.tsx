@@ -4,18 +4,17 @@ import Carrossel from '@/app/ui/about/carrossel';
 import React from 'react';
 
 export default function Tipografia({ params }: { params: { slug: string } }) {
-  const [slug, setSlug] = React.useState<string>(params.slug);  
   const [action, setAction] = React.useState<Action | null>(null);
 
   const getAction = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/actions/${slug}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/actions/${params.slug}`);
     const json = await response.json();
     setAction(json);
   }
 
   React.useEffect(() => {
     getAction()
-  }, [slug]);
+  }, [params.slug]);
 
   return (
     <div className='flex flex-col w-full lg:p-10 md:p-10 pt-0 bg-slate-100 gap-5'>
