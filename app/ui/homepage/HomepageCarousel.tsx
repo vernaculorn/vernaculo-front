@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-import Image from "next/image";
 import { register } from 'swiper/element/bundle'
 
 register()
@@ -9,8 +8,7 @@ import 'swiper/css/pagination'
 import './carousel.css'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
-import SVGBorder2 from '@/app/icons/SVGBorder2';
-import SVGBorder1 from '@/app/icons/SVGBorder1';
+import SVGBorder from '@/app/icons/SVGBorder'
 
 const HomepageCarousel = () => {
     const data = [
@@ -42,13 +40,10 @@ const HomepageCarousel = () => {
                         ))}
                     </Swiper>
                     <div className="">
-                        <SVGBorder2 className=" pointer-events-none absolute z-10 h-96 lg:h-auto lg:w-full bottom-[-8rem] fill-current text-carrossel" />
-                    </div>
-                    <div className="">
-                        <SVGBorder1 className=" pointer-events-none absolute bottom-0 z-20 w-full mt-10 fill-current text-white" />
+                        <SVGBorder className=" pointer-events-none absolute bottom-0 z-20 w-full mt-10 fill-current text-white" />
+                        <SVGBorder className=" pointer-events-none absolute bottom-0 z-20 w-full mt-10 fill-current text-white" />
                     </div>
                 </div>
-                {/*||||||||||||||||||||*/}
             </div>
         </div >
     )
