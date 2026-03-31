@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import SVGMap from '../ui/incursion/SVGMap'
 import { Material } from '../types/material'
@@ -7,7 +8,7 @@ import { leagueGothic } from '../ui/fonts'
 import { FileProps } from '../types/file'
 import Image from 'next/image'
 import { Region } from '../types/region'
-import { it } from 'node:test'
+import SVGBorder from '../icons/SVGBorder'
 
 type ItemProps = {
   name: string,
@@ -20,178 +21,283 @@ type ItemProps = {
 }
 
 export default function Incursion() {
+
   const [materials, setMaterials] = useState<Material[]>([])
   const [craftsmans, setCraftsmans] = useState<Craftsman[]>([])
   const [regions, setRegions] = useState<Region[]>([])
   const [selectedRegions, setSelectedRegions] = useState<Region[]>([])
   const [item, setItem] = useState<ItemProps | null>(null)
-  const [region, setRegion] = useState<Region|undefined>(undefined)
-  const [tab, setTab] = useState(1)
+  const [region, setRegion] = useState<Region | null>(null)
+  const [carouselIndex, setCarouselIndex] = useState(0)
+
+  // ================= FETCH =================
 
   const getMaterials = async () => {
     let url = '/materials?'
 
-    if ((region != undefined) && (region?.slug != 'rio-grande-do-norte')) {
-      url += 'region=' + region?.slug + '&'
+    if (region && region.slug !== 'rio-grande-do-norte') {
+      url += 'region=' + region.slug + '&'
     }
 
-    if ((item != undefined) && (item?.type == 'craftsman') && (item?.slug != 'artifices')) {
+    if (!region && item?.type === 'craftsman') {
       url += 'craftsman=' + item.slug
     }
 
-    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + url)
-    const data = await response.json()
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + url)
+    const data = await res.json()
 
-    if (item?.type == 'material') {
-      setSelectedRegions(data.find((material: Material) => material.slug == item.slug)?.regions)
+    const filtered = data.filter((m: Material) => m.slug !== 'materiais')
+    setMaterials(filtered)
+
+    if (!item && !region && filtered.length > 0) {
+      getItem(filtered[0].slug, 'materials')
     }
-
-    setMaterials(data.filter((material: Material) => material.slug != 'materiais'))
   }
 
   const getCraftsmans = async () => {
-    let url = '/craftsmans?';
+    let url = '/craftsmans?'
 
-    if ((region != undefined) && (region?.slug != 'rio-grande-do-norte')) {
-      url += 'region=' + region?.slug + '&'
+    if (region && region.slug !== 'rio-grande-do-norte') {
+      url += 'region=' + region.slug + '&'
     }
-    
-    if ((item != undefined) && (item?.type == 'material') && (item?.slug != 'materiais')) {
+
+    if (!region && item?.type === 'material') {
       url += 'material=' + item.slug
     }
 
-    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + url)
-    const data = await response.json()
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + url)
+    const data = await res.json()
 
-    if (item?.type == 'craftsman') {
-      setSelectedRegions([data.find((craftsman: Craftsman) => craftsman.slug == item.slug)?.region])
-    }
-
-    setCraftsmans(data.filter((craftsman: Craftsman) => craftsman.slug != 'artifices'))
+    const filtered = data.filter((c: Craftsman) => c.slug !== 'artifices')
+    setCraftsmans(filtered)
   }
 
   const getRegions = async () => {
-    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/regions')
-    const data = await response.json()
-
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/regions')
+    const data = await res.json()
     setRegions(data)
   }
 
   const getItem = async (slug: string, route: string) => {
-    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/' + route + '/' + slug)
-    const data = await response.json()
+    if (!slug) return
 
-    let itemType = '';
-
-    switch (route) {
-      case 'materials':
-        itemType = 'material'
-        break;
-      case 'craftsmans':
-        itemType = 'craftsman'
-        break;
-      default:
-        itemType = 'region'
-        break;
-    } 
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/' + route + '/' + slug)
+    const data = await res.json()
 
     setItem({
       name: data.name,
       slug: data.slug,
-      type: itemType,
+      type: route === 'materials' ? 'material' : 'craftsman',
       video: data.video,
       image: data.image,
       content: data.content,
       files: data.files
     })
+
+    setCarouselIndex(0)
   }
+
+  // ================= EFFECTS =================
+
+  useEffect(() => {
+    getRegions()
+    getMaterials()
+    getCraftsmans()
+  }, [])
 
   useEffect(() => {
     getMaterials()
     getCraftsmans()
   }, [region, item])
 
-  useEffect(() => {
-    getRegions()
-  }, [])
+  // ================= HELPERS =================
 
-  const materialList = (<div className='min-w-full mx-auto my-5 relative'>
-    <div className='p-2 w-full bg-[#C5C5C5] rounded-t cursor-pointer' onClick={() => getItem('materiais', 'materials')}>
-      <h1 className={leagueGothic.className + `text-lg`}>Materiais</h1>
-    </div>
-    <div className='min-w-full h-[100px] bg-[black/70] rounded-b border-solid border-[1px] border-slate-400 overflow-hidden overflow-y-auto'>
-      <ul className='px-2 text-white overflow-hidden overflow-y-auto list-inside list-image-checkmark'>
-        {materials.map((material) => (
-          <li className={`hover:bg-slate-600/50 cursor-pointer ${item?.slug == material.slug ? 'bg-slate-600/50' : ''}`}
-            key={material.slug}
-            onClick={() => getItem(material.slug, 'materials')}>{material.name}</li>
-        ))}
-      </ul>
-    </div>
-  </div>)
+  const videoId =
+    item?.video && item.video.includes('youtube')
+      ? new URLSearchParams(new URL(item.video).search).get('v')
+      : null
 
-  const craftsmanList = (<div className='min-w-full mx-auto my-5 relative'>
-    <div className='p-2 w-full bg-[#C5C5C5] rounded-t cursor-pointer' onClick={() => getItem('artifices', 'craftsmans')}>
-      <h1 className={leagueGothic.className + `text-lg`}>Artífices</h1>
-    </div>
-    <div className='min-w-full h-[100px] bg-[black/70] rounded-b border-solid border-[1px] border-slate-400 overflow-hidden overflow-y-auto'>
-      <ul className='px-2 text-white overflow-hidden overflow-y-auto list-inside list-image-checkmark'>
-        {craftsmans.map((craftsman) => (
-          <li className={`hover:bg-slate-600/50 cursor-pointer ${item?.slug == craftsman.slug ? 'bg-slate-600/50' : ''}`}
-            key={craftsman.slug}
-            onClick={() => getItem(craftsman.slug, 'craftsmans')}>{craftsman.name}</li>
-        ))}
-      </ul>
-    </div>
-  </div>)
+  // ================= UI =================
 
   return (
-    <div className='flex gap-5 relative justify-center bg-no-repeat min-h-screen w-full bg-center bg-cover bg-[url("/images/action/imgBG3.png")]'>
-      <div className='max-w-[1140px] w-full gap-2 h-[745px] flex flex-col lg:flex-row'>
-        <div className='lg:max-w-[40%] py-5 w-full p-5 rounded-lg'>
-          <div className='w-full h-full bg-black/70 p-5 rounded-lg'>
-            <div className='w-full'>{materialList}</div>
-            <div className='w-full'>{craftsmanList}</div>
-            <div className='mb-auto'><SVGMap regions={regions} getItem={getItem} selectedRegions={selectedRegions} setSelectedRegions={setSelectedRegions} setRegion={setRegion} /></div>
-          </div>
-        </div>
+    <div className="bg-[#111] text-white min-h-screen">
 
-        <div className='max-w-[60%] w-full py-5'>
-          <div className='w-full bg-[#C5C5C5] rounded-lg md:p-8 p-3'>
-            <div className='p-2 w-full bg-[#C5C5C5] rounded-t h-[220px]'>
-              {
-                ((item?.video != undefined) && (item?.video != '') && (item?.video != null)) ? (
-                  <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URLSearchParams(new URL(item.video).search).get('v')}`}
-                    title="Antonio Celso: O som que nasce da madeira"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen></iframe>
-                  ) : (
-                  item?.image && <Image src={item.image.file_url} alt={item.name} width={0} height={0} sizes="100vw" style={{width: '100%', height: 'auto', maxHeight: '250px'}} />
+      {/* ================= FILTROS ================= */}
+      <div className="bg-gradient-to-b from-[#2b2b2b] to-[#1a1a1a] py-10">
+        
+      </div>
+
+      {/* ================= CONTEÚDO ================= */}
+      {item && (
+        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-3 gap-8">
+
+          {/* BLOCO LARANJA */}
+          <div className="bg-orange-600 p-6 flex flex-col items-center text-center">
+            <SVGBorder invert />
+
+            <div className="flex flex-col gap-6 w-full">
+
+              {/* MATERIAL */}
+              <select
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  if (value === 'all') {
+                    if (materials.length > 0) {
+                      getItem(materials[0].slug, 'materials')
+                    }
+                    return
+                  }
+
+                  getItem(value, 'materials')
+                }}
+                className="p-3 bg-white text-black rounded"
+              >
+                <option value="all">Todos materiais</option>
+                {materials.map(m => (
+                  <option key={m.slug} value={m.slug}>{m.name}</option>
+                ))}
+              </select>
+
+              {/* ARTIFICES */}
+              <select
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  if (value === 'all') {
+                    if (craftsmans.length > 0) {
+                      getItem(craftsmans[0].slug, 'craftsmans')
+                    }
+                    return
+                  }
+
+                  getItem(value, 'craftsmans')
+                }}
+                className="p-3 bg-white text-black rounded"
+              >
+                <option value="all">Todos artífices</option>
+                {craftsmans.map(c => (
+                  <option key={c.slug} value={c.slug}>{c.name}</option>
+                ))}
+              </select>
+
+              {/* MAPA */}
+              <SVGMap
+                regions={regions}
+                getItem={getItem}
+                setItem={setItem}
+                selectedRegions={selectedRegions}
+                setSelectedRegions={setSelectedRegions}
+                setRegion={setRegion}
+              />
+
+            </div>
+
+            <SVGBorder />
+          </div>
+
+          {/* TEXTO */}
+          <div className="lg:col-span-2 px-2 py-8">
+            <h1 className={`${leagueGothic.className} text-5xl`}>
+              {item.name}
+            </h1>
+
+            <div
+              className="mt-6 text-white/80 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: item.content }}
+            />
+          </div>
+
+        </div>
+      )}
+
+      {/* ================= CARROSSEL ================= */}
+      {item?.files && item.files.length > 0 && (
+        <div className="max-w-4xl mx-auto py-20">
+
+          <div className="relative flex items-center justify-center">
+
+            {/* BOTÃO ESQ */}
+            <button
+              onClick={() =>
+                setCarouselIndex((prev) =>
+                  prev === 0 ? item.files.length - 1 : prev - 1
                 )
               }
-            </div>
-            
-            <div className='relative text-white flex-1'>
-              <div className='w-full my-10 flex gap-2'>
-                  <button onClick={() => setTab(1)} className={`text-[#D2CFCC] border-solid w-24 border-t-4 border-l-2 pt-1 ${tab == 1 ? 'border-slate-700 text-slate-700' : 'border-slate-500/50'}`}>SOBRE</button>
-                  <button onClick={() => setTab(2)} className={`text-[#D2CFCC] border-solid w-24 border-t-4 border-l-2 pt-1 ${tab == 2 ? 'border-slate-700 text-slate-700' : 'border-slate-500/50'}`}>GALERIA</button>
-              </div>
-              <div className='flex flex-col my-16 h-[220px]'>
-                  <div className={`w-full text-black overflow-y-scroll ${tab == 1 ? '' : 'hidden'}`}>
-                      {item?.content && <p dangerouslySetInnerHTML={{ __html: item?.content }} className="overflow-auto"></p>}
+              className="absolute left-0 z-20 bg-black/60 px-3 py-2"
+            >
+              ◀
+            </button>
+
+            {/* TRACK CENTRAL */}
+            <div className="relative w-[900px] h-[350px] flex items-center justify-center overflow-hidden">
+
+              {item.files.map((img, index) => {
+                const offset = index - carouselIndex
+
+                // loop infinito
+                const total = item.files.length
+                const realOffset =
+                  ((offset + total + total / 2) % total) - total / 2
+
+                return (
+                  <div
+                    key={index}
+                    className="absolute transition-all duration-500 ease-in-out"
+                    style={{
+                      transform: `
+                        translateX(${realOffset * 260}px)
+                        scale(${realOffset === 0 ? 1 : 0.7})
+                      `,
+                      opacity: Math.abs(realOffset) > 1 ? 0 : 1,
+                      zIndex: realOffset === 0 ? 10 : 5,
+                    }}
+                  >
+                    <Image
+                      src={img.file_url}
+                      alt=""
+                      width={realOffset === 0 ? 320 : 220}
+                      height={300}
+                      className="rounded object-cover"
+                    />
                   </div>
-                  <div className={`flex flex-wrap gap-4 w-full ${tab == 2 ? '' : 'hidden'}`}>
-                      {item?.files && item.files.map((image, index) => (
-                        <div key={index} style={{backgroundImage: `url(${image.file_url})`}} className='w-28 h-28 bg-cover bg-center flex bg-slate-600/25'></div>
-                      ))}
-                  </div>
-              </div>
+                )
+              })}
+
             </div>
+
+            {/* BOTÃO DIR */}
+            <button
+              onClick={() =>
+                setCarouselIndex((prev) =>
+                  prev === item.files.length - 1 ? 0 : prev + 1
+                )
+              }
+              className="absolute right-0 z-20 bg-black/60 px-3 py-2"
+            >
+              ▶
+            </button>
+
           </div>
+
         </div>
-      </div>
+      )}
+
+      {/* ================= VIDEO ================= */}
+      {videoId && (
+        <>
+          <SVGBorder invert />
+          <div className="max-w-4xl mx-auto py-10 px-4 border-y-4 border-white">
+            <iframe
+              className="w-full aspect-video"
+              src={`https://www.youtube.com/embed/${videoId}`}
+              allowFullScreen
+            />
+          </div>
+          <SVGBorder />
+        </>
+      )}
+
     </div>
   )
 }

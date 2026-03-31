@@ -49,11 +49,9 @@ export default function About() {
             </section>
 
             {/* PROJETO */}
-            <section className="py-20 px-4 flex justify-center">
-                <div className="w-full max-w-5xl">
-
-                    <SVGBorder invert={true} />
-
+            <section className="py-10 px-4 flex flex-col items-center justify-center">
+                <SVGBorder invert={true} />
+                <div className="w-full max-w-5xl py-6 border-y-4 border-white">
                     <h2 className={`${leagueGothic.className} text-5xl mb-8`}>
                         PROJETO VERNÁCULO
                     </h2>
@@ -126,9 +124,8 @@ export default function About() {
                             </p>
                         </div>
                     </div>
-
-                    <SVGBorder />
                 </div>
+                <SVGBorder />
             </section>
 
             {/* FRASE */}
@@ -138,7 +135,7 @@ export default function About() {
             >
                 <div className="absolute inset-0 bg-[#1E1E1E]/60" />
 
-                <div className="relative z-10 w-full max-w-5xl flex justify-start p-16 md:p-32 md:ml-48">
+                <div className="relative z-10 w-full max-w-5xl flex justify-start p-8 md:p-16 md:ml-48">
                   <h3 className={`${leagueGothic.className} relative z-10 text-right text-3xl md:text-4xl mb-8`}>
                     MÃOS QUE, EM <br />
                     CADA GESTO, CRIAM <br />
@@ -146,27 +143,19 @@ export default function About() {
                   </h3>
                 </div>
 
-                <div className="w-full max-w-7xl text-center bg-[#1E1E1E] p-4 md:p-16">
-
+                <div className="w-full text-center bg-[#1E1E1E] p-4 md:p-16 z-50">
                     <SVGBorder invert={true} />
-
-                    <div className="border border-white/20 bg-black overflow-hidden max-w-3xl mx-auto">
-
-                        <div className="relative w-full pt-[56.25%]">
+                    <div className="max-w-3xl mx-auto py-10 px-4 border-y-4 border-white">
+                        <div className="max-w-3xl mx-auto">
                             <iframe
-                                className="absolute top-0 left-0 w-full h-full"
-                                src="https://www.youtube.com/embed/09OwlbbsqCQ"
-                                title="Projeto Vernáculo"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
+                            className="w-full aspect-video"
+                            src="https://www.youtube.com/embed/09OwlbbsqCQ"
+                            allowFullScreen
                             />
+
                         </div>
-
                     </div>
-
                     <SVGBorder />
-
                 </div>
             </section>
 
