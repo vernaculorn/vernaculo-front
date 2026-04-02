@@ -131,7 +131,7 @@ export default function About() {
             {/* FRASE */}
             <section
                 className="relative h-[700px] md:h-[1200px] w-full flex flex-col items-center justify-start bg-cover"
-                style={{ backgroundImage: "url('/images/about/hero1.webp')" }}
+                style={{ backgroundImage: "url('/bg/bicicleta.webp')" }}
             >
                 <div className="absolute inset-0 bg-[#1E1E1E]/60" />
 

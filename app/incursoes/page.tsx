@@ -29,6 +29,7 @@ export default function Incursion() {
   const [item, setItem] = useState<ItemProps | null>(null)
   const [region, setRegion] = useState<Region | null>(null)
   const [carouselIndex, setCarouselIndex] = useState(0)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   // ================= FETCH =================
 
@@ -110,6 +111,16 @@ export default function Incursion() {
     getCraftsmans()
   }, [region, item])
 
+  useEffect(() => {
+    if (!item?.files || item.files.length <= 1) return
+    const interval = setInterval(() => {
+      setCarouselIndex((prev) =>
+        prev === item.files.length - 1 ? 0 : prev + 1
+      )
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [item])
+
   // ================= HELPERS =================
 
   const videoId =
@@ -120,184 +131,240 @@ export default function Incursion() {
   // ================= UI =================
 
   return (
-    <div className="bg-[#111] text-white min-h-screen">
+    <div className="text-white min-h-screen" style={{ backgroundImage: 'url(/bg/palmeiras.webp)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div className="bg-black/20 w-full h-full py-64">
+        {/* ================= CONTEÚDO ================= */}
+        {item && (
+          <div className="w-full mx-auto bg-black">
 
-      {/* ================= FILTROS ================= */}
-      <div className="bg-gradient-to-b from-[#2b2b2b] to-[#1a1a1a] py-10">
-        
-      </div>
+            <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
+              {/* BLOCO LARANJA */}
+              <div className="bg-orange-600 p-6 flex flex-col items-center text-center">
+                <SVGBorder invert />
 
-      {/* ================= CONTEÚDO ================= */}
-      {item && (
-        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-3 gap-8">
+                <div className="flex flex-col gap-6 w-full">
 
-          {/* BLOCO LARANJA */}
-          <div className="bg-orange-600 p-6 flex flex-col items-center text-center">
-            <SVGBorder invert />
+                  {/* MATERIAL */}
+                  <select
+                    onChange={(e) => {
+                      const value = e.target.value
 
-            <div className="flex flex-col gap-6 w-full">
+                      if (value === 'all') {
+                        if (materials.length > 0) {
+                          getItem(materials[0].slug, 'materials')
+                        }
+                        return
+                      }
 
-              {/* MATERIAL */}
-              <select
-                onChange={(e) => {
-                  const value = e.target.value
+                      getItem(value, 'materials')
+                    }}
+                    className="p-3 bg-white text-black rounded"
+                  >
+                    <option value="all">Todos materiais</option>
+                    {materials.map(m => (
+                      <option key={m.slug} value={m.slug}>{m.name}</option>
+                    ))}
+                  </select>
 
-                  if (value === 'all') {
-                    if (materials.length > 0) {
-                      getItem(materials[0].slug, 'materials')
-                    }
-                    return
-                  }
+                  {/* ARTIFICES */}
+                  <select
+                    onChange={(e) => {
+                      const value = e.target.value
 
-                  getItem(value, 'materials')
-                }}
-                className="p-3 bg-white text-black rounded"
+                      if (value === 'all') {
+                        if (craftsmans.length > 0) {
+                          getItem(craftsmans[0].slug, 'craftsmans')
+                        }
+                        return
+                      }
+
+                      getItem(value, 'craftsmans')
+                    }}
+                    className="p-3 bg-white text-black rounded"
+                  >
+                    <option value="all">Todos artífices</option>
+                    {craftsmans.map(c => (
+                      <option key={c.slug} value={c.slug}>{c.name}</option>
+                    ))}
+                  </select>
+
+                  {/* MAPA */}
+                  <SVGMap
+                    regions={regions}
+                    getItem={getItem}
+                    setItem={setItem}
+                    selectedRegions={selectedRegions}
+                    setSelectedRegions={setSelectedRegions}
+                    setRegion={setRegion}
+                  />
+
+                </div>
+
+                <SVGBorder />
+              </div>
+
+              {/* TEXTO */}
+              <div className="lg:col-span-2 px-2 py-8">
+                <h1 className={`${leagueGothic.className} text-5xl`}>
+                  {item.name}
+                </h1>
+
+                <div
+                  className="mt-6 text-white/80 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: item.content }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= CARROSSEL ================= */}
+        {item?.files && item.files.length > 0 && (
+          <div className="max-w-7xl mx-auto py-20 backdrop-blur-sm bg-black/20 rounded">
+
+            <div className="relative flex items-center justify-center">
+
+              {/* BOTÃO ESQ */}
+              <button
+                onClick={() =>
+                  setCarouselIndex((prev) =>
+                    prev === 0 ? item.files.length - 1 : prev - 1
+                  )
+                }
+                className="absolute left-0 z-20 bg-black/60 px-3 py-2"
               >
-                <option value="all">Todos materiais</option>
-                {materials.map(m => (
-                  <option key={m.slug} value={m.slug}>{m.name}</option>
-                ))}
-              </select>
+                ◀
+              </button>
 
-              {/* ARTIFICES */}
-              <select
-                onChange={(e) => {
-                  const value = e.target.value
+              {/* TRACK CENTRAL */}
+              <div className="relative w-[900px] h-[350px] flex items-center justify-center overflow-hidden">
 
-                  if (value === 'all') {
-                    if (craftsmans.length > 0) {
-                      getItem(craftsmans[0].slug, 'craftsmans')
-                    }
-                    return
-                  }
+                {item.files.map((img, index) => {
+                  const offset = index - carouselIndex
 
-                  getItem(value, 'craftsmans')
-                }}
-                className="p-3 bg-white text-black rounded"
+                  // loop infinito
+                  const total = item.files.length
+                  const realOffset =
+                    ((offset + total + total / 2) % total) - total / 2
+
+                  return (
+                    <div
+                      key={index}
+                      className="absolute transition-all duration-500 ease-in-out"
+                      style={{
+                        transform: `
+                          translateX(${realOffset * 260}px)
+                          scale(${realOffset === 0 ? 1 : 0.7})
+                        `,
+                        opacity: Math.abs(realOffset) > 1 ? 0 : 1,
+                        zIndex: realOffset === 0 ? 10 : 5,
+                      }}
+                    >
+                      <Image
+                        src={img.file_url}
+                        alt=""
+                        width={realOffset === 0 ? 320 : 220}
+                        height={300}
+                        className="rounded object-cover cursor-pointer"
+                        onClick={() => realOffset === 0 && setLightboxIndex(index)}
+                      />
+                    </div>
+                  )
+                })}
+
+              </div>
+
+              {/* BOTÃO DIR */}
+              <button
+                onClick={() =>
+                  setCarouselIndex((prev) =>
+                    prev === item.files.length - 1 ? 0 : prev + 1
+                  )
+                }
+                className="absolute right-0 z-20 bg-black/60 px-3 py-2"
               >
-                <option value="all">Todos artífices</option>
-                {craftsmans.map(c => (
-                  <option key={c.slug} value={c.slug}>{c.name}</option>
-                ))}
-              </select>
-
-              {/* MAPA */}
-              <SVGMap
-                regions={regions}
-                getItem={getItem}
-                setItem={setItem}
-                selectedRegions={selectedRegions}
-                setSelectedRegions={setSelectedRegions}
-                setRegion={setRegion}
-              />
+                ▶
+              </button>
 
             </div>
 
-            <SVGBorder />
           </div>
+        )}
 
-          {/* TEXTO */}
-          <div className="lg:col-span-2 px-2 py-8">
-            <h1 className={`${leagueGothic.className} text-5xl`}>
-              {item.name}
-            </h1>
-
-            <div
-              className="mt-6 text-white/80 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: item.content }}
-            />
-          </div>
-
-        </div>
-      )}
-
-      {/* ================= CARROSSEL ================= */}
-      {item?.files && item.files.length > 0 && (
-        <div className="max-w-4xl mx-auto py-20">
-
-          <div className="relative flex items-center justify-center">
+        {/* ================= LIGHTBOX ================= */}
+        {lightboxIndex !== null && item?.files && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+            onClick={() => setLightboxIndex(null)}
+          >
+            {/* BOTÃO FECHAR */}
+            <button
+              className="absolute top-4 right-6 text-white text-3xl font-bold z-10"
+              onClick={() => setLightboxIndex(null)}
+            >
+              ✕
+            </button>
 
             {/* BOTÃO ESQ */}
             <button
-              onClick={() =>
-                setCarouselIndex((prev) =>
-                  prev === 0 ? item.files.length - 1 : prev - 1
+              className="absolute left-4 text-white text-4xl z-10 bg-black/40 px-3 py-2 rounded"
+              onClick={(e) => {
+                e.stopPropagation()
+                setLightboxIndex((prev) =>
+                  prev === null ? 0 : prev === 0 ? item.files.length - 1 : prev - 1
                 )
-              }
-              className="absolute left-0 z-20 bg-black/60 px-3 py-2"
+              }}
             >
               ◀
             </button>
 
-            {/* TRACK CENTRAL */}
-            <div className="relative w-[900px] h-[350px] flex items-center justify-center overflow-hidden">
-
-              {item.files.map((img, index) => {
-                const offset = index - carouselIndex
-
-                // loop infinito
-                const total = item.files.length
-                const realOffset =
-                  ((offset + total + total / 2) % total) - total / 2
-
-                return (
-                  <div
-                    key={index}
-                    className="absolute transition-all duration-500 ease-in-out"
-                    style={{
-                      transform: `
-                        translateX(${realOffset * 260}px)
-                        scale(${realOffset === 0 ? 1 : 0.7})
-                      `,
-                      opacity: Math.abs(realOffset) > 1 ? 0 : 1,
-                      zIndex: realOffset === 0 ? 10 : 5,
-                    }}
-                  >
-                    <Image
-                      src={img.file_url}
-                      alt=""
-                      width={realOffset === 0 ? 320 : 220}
-                      height={300}
-                      className="rounded object-cover"
-                    />
-                  </div>
-                )
-              })}
-
+            {/* IMAGEM */}
+            <div onClick={(e) => e.stopPropagation()}>
+              <Image
+                src={item.files[lightboxIndex].file_url}
+                alt=""
+                width={1200}
+                height={800}
+                className="max-h-[90vh] max-w-[90vw] object-contain rounded"
+              />
             </div>
 
             {/* BOTÃO DIR */}
             <button
-              onClick={() =>
-                setCarouselIndex((prev) =>
-                  prev === item.files.length - 1 ? 0 : prev + 1
+              className="absolute right-4 text-white text-4xl z-10 bg-black/40 px-3 py-2 rounded"
+              onClick={(e) => {
+                e.stopPropagation()
+                setLightboxIndex((prev) =>
+                  prev === null ? 0 : prev === item.files.length - 1 ? 0 : prev + 1
                 )
-              }
-              className="absolute right-0 z-20 bg-black/60 px-3 py-2"
+              }}
             >
               ▶
             </button>
 
+            {/* CONTADOR */}
+            <span className="absolute bottom-4 text-white/60 text-sm">
+              {lightboxIndex + 1} / {item.files.length}
+            </span>
           </div>
+        )}
 
-        </div>
-      )}
-
-      {/* ================= VIDEO ================= */}
-      {videoId && (
-        <>
-          <SVGBorder invert />
-          <div className="max-w-4xl mx-auto py-10 px-4 border-y-4 border-white">
-            <iframe
-              className="w-full aspect-video"
-              src={`https://www.youtube.com/embed/${videoId}`}
-              allowFullScreen
-            />
+        {/* ================= VIDEO ================= */}
+        {videoId && (
+          <div className="w-full mx-auto py-4 bg-black">
+            <SVGBorder invert />
+            <div className="max-w-4xl mx-auto py-4 px-4 border-y-4 border-white">
+              <iframe
+                className="w-full aspect-video"
+                src={`https://www.youtube.com/embed/${videoId}`}
+                allowFullScreen
+              />
+            </div>
+            <SVGBorder />
           </div>
-          <SVGBorder />
-        </>
-      )}
+        )}
 
+      </div>
     </div>
   )
 }
