@@ -6,29 +6,48 @@ const ActionCard: React.FC<{ action: Action }> = ({ action }) => {
 
   return (
     <div className='flex flex-col lg:flex-row justify-center w-full px-0 lg:px-5'>
-      <div style={{ backgroundImage: `url(${action.image.file_url})` }} className='bg-no-repeat bg-center bg-cover w-full lg:w-100 lg:min-h-96 max-h-full flex relative'>
-        <div style={{ background: `${action.primary_color}99` }} className='absolute w-full h-full'></div>
-        <div className='flex flex-col w-full h-full my-5 md:my-7'>
-          <div className='z-10 mt-auto w-full'>
-            <h1 style={{ borderBottomColor: action.secondary_color, color: action.secondary_color }} className='w-96 mx-auto font-bold text-2xl text-center border-solid border-b-[8px]'>{action.title}</h1>
-          </div>
-          <div style={{ color: action.secondary_color }} className='z-10 mb-auto w-96 mx-auto text-center'>
-            <p>{action.coordinator}</p>
-            <p>{action.place} , {action.year}</p>
-          </div>
+
+      {/* LADO ESQUERDO — imagem com overlay */}
+      <div
+        style={{ backgroundImage: `url(${action.image.file_url})` }}
+        className='bg-no-repeat bg-center bg-cover w-full lg:w-100 h-72 max-h-full flex relative'
+      >
+        <div className='absolute inset-0 bg-black/50' />
+        <div className='flex flex-col w-full h-full py-8 px-6 justify-end gap-2 z-10'>
+          <h1
+            style={{ borderBottomColor: '#ffffff', color: '#ffffff' }}
+            className='font-bold text-3xl uppercase text-center leading-tight border-b-[6px] pb-3'
+          >
+            {action.title}
+          </h1>
+          <p style={{ color: '#ffffff' }} className='text-center text-sm font-semibold uppercase tracking-wide mt-1'>
+            {action.coordinator}
+          </p>
+          <p style={{ color: '#ffffff' }} className='text-center text-sm font-semibold uppercase tracking-widest'>
+            {action.place}
+          </p>
         </div>
       </div>
 
-      <div style={{ background: action.primary_color }} className='flex flex-col relative overflow-hidden text-xl justify-center items-center p-10 [&>div]:p-0 lg:mx-2 w-full lg:w-[50rem] lg:min-h-96 h-full'>
-        <p className='w-full' style={{ color: action.secondary_color }}>{action.description}</p>
-        <div className='p-1 w-full justify-end flex bottom-0'>
+      {/* LADO DIREITO — borda colorida, fundo branco */}
+      <div
+        style={{ borderColor: action.primary_color }}
+        className='flex flex-col border-4 lg:mx-2 w-full lg:w-[50rem] h-72 p-8 justify-between'
+      >
+        <p className='text-white text-base leading-relaxed'>
+          {action.description}
+        </p>
+        <div className='flex justify-end mt-6'>
           <Link
-            style={{ borderColor: action.secondary_color, color: action.secondary_color }}
-            className={`w-40 text-center bg-transparent border-solid border-4 `}
+            style={{ borderColor: action.primary_color, color: action.primary_color }}
+            className='px-5 py-1 border-4 bg-transparent text-center font-semibold'
             href={`/postagens/${action.slug}`}
-          >Conhecer +</Link>
+          >
+            conhecer +
+          </Link>
         </div>
       </div>
+
     </div>
   )
 }

@@ -1,6 +1,8 @@
 'use client';
 import { Action } from '@/app/types/action';
 import Carrossel from '@/app/ui/about/carrossel';
+import { leagueGothic } from '@/app/ui/fonts';
+import Image from 'next/image';
 import React from 'react';
 
 export default function Tipografia({ params }: { params: { slug: string } }) {
@@ -17,34 +19,66 @@ export default function Tipografia({ params }: { params: { slug: string } }) {
   }, [params.slug]);
 
   return (
-    <div className='flex flex-col w-full lg:p-10 md:p-10 pt-0 bg-slate-100 gap-5'>
-      <div className='container w-full mx-auto'>
-        <div style={{backgroundImage: `url(${action?.image?.file_url})` }} className='bg-no-repeat bg-center bg-cover w-full h-80 flex relative'>
-          <div style={{background: `${action?.primary_color}90`}} className='absolute w-full h-full'></div>
-          <div className='flex flex-col w-full h-full absolute z-[1]' style={{color: action?.secondary_color}}>
-            <div className='z-10 mt-auto w-full'>
-              <h1 style={{borderBottomColor: action?.secondary_color}} className='w-96 mx-auto font-bold text-2xl text-center border-solid  border-b-[8px]'>{action?.title}</h1>
-            </div>
-            <div className='z-10 mb-auto w-96 mx-auto text-center'>
-              <p>{action?.coordinator}</p>
-              <p>{action?.place} , {action?.year}</p>
-            </div>
-          </div>
-        </div>
-        <div className='mx-2 md:mx-0 lg:mx-0'>
-          {(action?.files && action?.files.length > 0)
-            ? <Carrossel images={action?.files?.map((file) => ({src: file?.file_url, id: file?.id}))} />
-            : <div className='flex flex-col p-8 border-solid border-4 w-full'>
-                <p>Este projeto não possui imagens</p>
-              </div>
-          }
-        </div>
-        <div className='m-5 lg:mx-32 md:mx-10'>
-          <div className='flex flex-col p-8 border-solid border-4 w-full' style={{borderColor: action?.primary_color}}>
-            {action && <div style={{ color: '#000000' }} dangerouslySetInnerHTML={{__html: action?.content}}></div>}
+    <div className='bg-[#1E1E1E] flex flex-col relative'>
+
+      {/* BANNER */}
+      <div className="relative w-full h-64 md:h-[600px] overflow-hidden">
+        <Image
+          src="/bg/meninosJogandoBola.webp"
+          alt="Banner postagens"
+          fill
+          className="object-cover object-center"
+          priority
+        />
+        <div className="absolute bottom-0 left-0 w-full bg-black/50">
+          <div className="max-w-4xl mx-auto pb-4">
+            <p className="text-center pt-8 text-white md:text-xl">
+              Encontre aqui conteúdos diversos sobre a arte e o artefato popular,
+              como: ações do Projeto Vernáculo, reflexões sobre temas tratados
+              no âmbito do projeto, notícias relacionadas a esses temas,
+              resenhas de publicações, entre outros.
+            </p>
           </div>
         </div>
       </div>
+
+      {/* TÍTULO */}
+      <div className='w-full py-10 px-6'>
+        <div className='max-w-5xl mx-auto p-2 border-b-4 text-white' style={{ backgroundColor: `${action?.primary_color}40`, borderBottomColor: action?.primary_color }}>
+          <h2
+            className={`${leagueGothic.className} text-5xl md:text-3xl uppercase leading-tight pb-3`}
+          >
+            {action?.title}
+          </h2>
+          <p className='text-sm uppercase tracking-widest mt-4'>
+            {action?.coordinator}
+          </p>
+          <p className='text-sm uppercase tracking-widest'>
+            {action?.place}
+          </p>
+        </div>
+      </div>
+
+      {/* CONTEÚDO */}
+      <div className='w-full py-12 px-6'>
+        <div className='max-w-5xl mx-auto'>
+          {action && (
+            <div
+              className='text-white/80 leading-relaxed md:columns-2 gap-10'
+              dangerouslySetInnerHTML={{ __html: action.content }}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* CARROSSEL DE FOTOS */}
+      {action?.files && action.files.length > 0 && (
+        <div className='w-full pb-16'>
+          <Carrossel images={action.files.map((file) => ({ src: file.file_url, id: file.id }))} />
+        </div>
+      )}
+
     </div>
   )
 }
+

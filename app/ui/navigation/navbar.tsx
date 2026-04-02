@@ -33,7 +33,7 @@ export default function Navbar() {
     return (
         <nav
             className={`
-                bg-[#1E1E1E] w-full h-20 fixed top-0 left-0 z-[60]
+                bg-[#1E1E1E]/40 w-full h-20 fixed top-0 left-0 z-[60]
                 transition-transform duration-300
                 ${show ? "translate-y-0" : "-translate-y-full"}
             `}

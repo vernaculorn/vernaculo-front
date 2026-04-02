@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Carrossel from '../ui/about/carrossel'
 import SVGMap from '../ui/incursion/SVGMap'
 import { Material } from '../types/material'
 import { Craftsman } from '../types/craftsman'
@@ -28,8 +29,6 @@ export default function Incursion() {
   const [selectedRegions, setSelectedRegions] = useState<Region[]>([])
   const [item, setItem] = useState<ItemProps | null>(null)
   const [region, setRegion] = useState<Region | null>(null)
-  const [carouselIndex, setCarouselIndex] = useState(0)
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   // ================= FETCH =================
 
@@ -94,8 +93,6 @@ export default function Incursion() {
       content: data.content,
       files: data.files
     })
-
-    setCarouselIndex(0)
   }
 
   // ================= EFFECTS =================
@@ -110,16 +107,6 @@ export default function Incursion() {
     getMaterials()
     getCraftsmans()
   }, [region, item])
-
-  useEffect(() => {
-    if (!item?.files || item.files.length <= 1) return
-    const interval = setInterval(() => {
-      setCarouselIndex((prev) =>
-        prev === item.files.length - 1 ? 0 : prev + 1
-      )
-    }, 3000)
-    return () => clearInterval(interval)
-  }, [item])
 
   // ================= HELPERS =================
 
@@ -220,133 +207,7 @@ export default function Incursion() {
 
         {/* ================= CARROSSEL ================= */}
         {item?.files && item.files.length > 0 && (
-          <div className="max-w-7xl mx-auto py-20 backdrop-blur-sm bg-black/20 rounded">
-
-            <div className="relative flex items-center justify-center">
-
-              {/* BOTÃO ESQ */}
-              <button
-                onClick={() =>
-                  setCarouselIndex((prev) =>
-                    prev === 0 ? item.files.length - 1 : prev - 1
-                  )
-                }
-                className="absolute left-0 z-20 bg-black/60 px-3 py-2"
-              >
-                ◀
-              </button>
-
-              {/* TRACK CENTRAL */}
-              <div className="relative w-[900px] h-[350px] flex items-center justify-center overflow-hidden">
-
-                {item.files.map((img, index) => {
-                  const offset = index - carouselIndex
-
-                  // loop infinito
-                  const total = item.files.length
-                  const realOffset =
-                    ((offset + total + total / 2) % total) - total / 2
-
-                  return (
-                    <div
-                      key={index}
-                      className="absolute transition-all duration-500 ease-in-out"
-                      style={{
-                        transform: `
-                          translateX(${realOffset * 260}px)
-                          scale(${realOffset === 0 ? 1 : 0.7})
-                        `,
-                        opacity: Math.abs(realOffset) > 1 ? 0 : 1,
-                        zIndex: realOffset === 0 ? 10 : 5,
-                      }}
-                    >
-                      <Image
-                        src={img.file_url}
-                        alt=""
-                        width={realOffset === 0 ? 320 : 220}
-                        height={300}
-                        className="rounded object-cover cursor-pointer"
-                        onClick={() => realOffset === 0 && setLightboxIndex(index)}
-                      />
-                    </div>
-                  )
-                })}
-
-              </div>
-
-              {/* BOTÃO DIR */}
-              <button
-                onClick={() =>
-                  setCarouselIndex((prev) =>
-                    prev === item.files.length - 1 ? 0 : prev + 1
-                  )
-                }
-                className="absolute right-0 z-20 bg-black/60 px-3 py-2"
-              >
-                ▶
-              </button>
-
-            </div>
-
-          </div>
-        )}
-
-        {/* ================= LIGHTBOX ================= */}
-        {lightboxIndex !== null && item?.files && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
-            onClick={() => setLightboxIndex(null)}
-          >
-            {/* BOTÃO FECHAR */}
-            <button
-              className="absolute top-4 right-6 text-white text-3xl font-bold z-10"
-              onClick={() => setLightboxIndex(null)}
-            >
-              ✕
-            </button>
-
-            {/* BOTÃO ESQ */}
-            <button
-              className="absolute left-4 text-white text-4xl z-10 bg-black/40 px-3 py-2 rounded"
-              onClick={(e) => {
-                e.stopPropagation()
-                setLightboxIndex((prev) =>
-                  prev === null ? 0 : prev === 0 ? item.files.length - 1 : prev - 1
-                )
-              }}
-            >
-              ◀
-            </button>
-
-            {/* IMAGEM */}
-            <div onClick={(e) => e.stopPropagation()}>
-              <Image
-                src={item.files[lightboxIndex].file_url}
-                alt=""
-                width={1200}
-                height={800}
-                className="max-h-[90vh] max-w-[90vw] object-contain rounded"
-              />
-            </div>
-
-            {/* BOTÃO DIR */}
-            <button
-              className="absolute right-4 text-white text-4xl z-10 bg-black/40 px-3 py-2 rounded"
-              onClick={(e) => {
-                e.stopPropagation()
-                setLightboxIndex((prev) =>
-                  prev === null ? 0 : prev === item.files.length - 1 ? 0 : prev + 1
-                )
-              }}
-            >
-              ▶
-            </button>
-
-            {/* CONTADOR */}
-            <span className="absolute bottom-4 text-white/60 text-sm">
-              {lightboxIndex + 1} / {item.files.length}
-            </span>
-          </div>
+          <Carrossel images={item.files.map((f) => ({ src: f.file_url, id: f.id }))} />
         )}
 
         {/* ================= VIDEO ================= */}
