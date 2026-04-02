@@ -1,0 +1,24 @@
+{
+  "institucionais": [
+    {
+      "nome": "Museu Câmara Cascudo / UFRN",
+      "descricao": "Um centro de pesquisa e extensão que foca na conservação, investigação e exposição do patrimônio histórico, natural do RN.",
+      "url": "https://mcc.ufrn.br/",
+      "logo": ""
+    },
+    {
+      "nome": "Departamento de Artes / UFRN",
+      "descricao": "Departamento responsável pela formação em artes visuais e pesquisa cultural na UFRN.",
+      "url": "https://www.ufrn.br/",
+      "logo": ""
+    }
+  ],
+  "nao_institucionais": [
+    {
+      "nome": "Parceiro Não Institucional",
+      "descricao": "Descrição do parceiro e sua contribuição para o Projeto Vernáculo.",
+      "url": "https://exemplo.com",
+      "logo": ""
+    }
+  ]
+}

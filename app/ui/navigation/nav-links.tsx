@@ -5,6 +5,7 @@ import Link from "next/link";
 const links = [
   { href: "/incursoes", label: "incursões" },
   { href: "/postagens", label: "postagens" },
+  { href: "/creditos", label: "créditos" },
 ];
 
 export default function NavLinks({

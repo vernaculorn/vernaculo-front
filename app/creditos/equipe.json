@@ -1,0 +1,32 @@
+[
+  {
+    "nome": "Nome Completo",
+    "cargo": "Coordenação Geral",
+    "email": "nome@ufrn.br"
+  },
+  {
+    "nome": "Nome Completo",
+    "cargo": "Design de Identidade Visual",
+    "email": "nome@ufrn.br"
+  },
+  {
+    "nome": "Nome Completo",
+    "cargo": "Desenvolvimento Front-end",
+    "email": "nome@ufrn.br"
+  },
+  {
+    "nome": "Nome Completo",
+    "cargo": "Desenvolvimento Back-end",
+    "email": "nome@ufrn.br"
+  },
+  {
+    "nome": "Nome Completo",
+    "cargo": "Pesquisa e Documentação",
+    "email": "nome@ufrn.br"
+  },
+  {
+    "nome": "Nome Completo",
+    "cargo": "UX / Interface",
+    "email": "nome@ufrn.br"
+  }
+]
