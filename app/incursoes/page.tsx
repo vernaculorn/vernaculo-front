@@ -21,6 +21,19 @@ type ItemProps = {
   files: FileProps[];
 }
 
+const ALL_REGIONS_SLUG = 'todas-as-regioes'
+const ALL_MATERIALS_SLUG = 'todos-os-materiais'
+const ALL_CRAFTSMANS_SLUG = 'todos-os-artifices'
+
+const isAllRegions = (slug?: string | null) =>
+  slug === ALL_REGIONS_SLUG || slug === 'rio-grande-do-norte'
+
+const isAllMaterials = (slug?: string | null) =>
+  slug === ALL_MATERIALS_SLUG || slug === 'materiais'
+
+const isAllCraftsmans = (slug?: string | null) =>
+  slug === ALL_CRAFTSMANS_SLUG || slug === 'artifices'
+
 export default function Incursion() {
 
   const [materials, setMaterials] = useState<Material[]>([])
@@ -35,40 +48,40 @@ export default function Incursion() {
   const getMaterials = async () => {
     let url = '/materials?'
 
-    if (region && region.slug !== 'rio-grande-do-norte') {
+    if (region && !isAllRegions(region.slug)) {
       url += 'region=' + region.slug + '&'
     }
 
-    if (!region && item?.type === 'craftsman') {
+    if (!region && item?.type === 'craftsman' && !isAllCraftsmans(item.slug)) {
       url += 'craftsman=' + item.slug
     }
 
     const res = await fetch(process.env.NEXT_PUBLIC_API_URL + url)
     const data = await res.json()
 
-    const filtered = data.filter((m: Material) => m.slug !== 'materiais')
+    const filtered = data.filter(
+      (m: Material) => m.slug !== ALL_MATERIALS_SLUG && m.slug !== 'materiais',
+    )
     setMaterials(filtered)
-
-    if (!item && !region && filtered.length > 0) {
-      getItem(filtered[0].slug, 'materials')
-    }
   }
 
   const getCraftsmans = async () => {
     let url = '/craftsmans?'
 
-    if (region && region.slug !== 'rio-grande-do-norte') {
+    if (region && !isAllRegions(region.slug)) {
       url += 'region=' + region.slug + '&'
     }
 
-    if (!region && item?.type === 'material') {
+    if (!region && item?.type === 'material' && !isAllMaterials(item.slug)) {
       url += 'material=' + item.slug
     }
 
     const res = await fetch(process.env.NEXT_PUBLIC_API_URL + url)
     const data = await res.json()
 
-    const filtered = data.filter((c: Craftsman) => c.slug !== 'artifices')
+    const filtered = data.filter(
+      (c: Craftsman) => c.slug !== ALL_CRAFTSMANS_SLUG && c.slug !== 'artifices',
+    )
     setCraftsmans(filtered)
   }
 
@@ -81,13 +94,31 @@ export default function Incursion() {
   const getItem = async (slug: string, route: string) => {
     if (!slug) return
 
-    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/' + route + '/' + slug)
+    const fallbacks: Record<string, string> = {
+      [ALL_REGIONS_SLUG]: 'rio-grande-do-norte',
+      [ALL_MATERIALS_SLUG]: 'materiais',
+      [ALL_CRAFTSMANS_SLUG]: 'artifices',
+    }
+
+    let res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/' + route + '/' + slug)
+
+    if (!res.ok && fallbacks[slug]) {
+      res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/' + route + '/' + fallbacks[slug])
+    }
+
+    if (!res.ok) return
+
     const data = await res.json()
+
+    const type =
+      route === 'materials' ? 'material' :
+      route === 'craftsmans' ? 'craftsman' :
+      'region'
 
     setItem({
       name: data.name,
       slug: data.slug,
-      type: route === 'materials' ? 'material' : 'craftsman',
+      type,
       video: data.video,
       image: data.image,
       content: data.content,
@@ -101,13 +132,13 @@ export default function Incursion() {
     getRegions()
     getMaterials()
     getCraftsmans()
+    getItem(ALL_REGIONS_SLUG, 'regions')
   }, [])
 
   useEffect(() => {
     getMaterials()
     getCraftsmans()
   }, [region, item])
-
   // ================= HELPERS =================
 
   const videoId =
@@ -133,21 +164,28 @@ export default function Incursion() {
 
                   {/* MATERIAL */}
                   <select
+                    value={
+                      item?.type === 'material'
+                        ? (isAllMaterials(item.slug) ? ALL_MATERIALS_SLUG : item.slug)
+                        : ''
+                    }
                     onChange={(e) => {
                       const value = e.target.value
-
-                      if (value === 'all') {
-                        if (materials.length > 0) {
-                          getItem(materials[0].slug, 'materials')
-                        }
-                        return
-                      }
-
+                      if (!value) return
+                      setRegion(null)
+                      setSelectedRegions([])
                       getItem(value, 'materials')
                     }}
-                    className="p-3 bg-white text-black rounded"
+                    className={`p-3 rounded border-2 ${
+                      item?.type === 'material'
+                        ? 'bg-white text-black border-black font-semibold'
+                        : 'bg-white/90 text-black/70 border-transparent'
+                    }`}
                   >
-                    <option value="all">Todos materiais</option>
+                    <option value="" disabled hidden>
+                      Materiais
+                    </option>
+                    <option value={ALL_MATERIALS_SLUG}>Todos os materiais</option>
                     {materials.map(m => (
                       <option key={m.slug} value={m.slug}>{m.name}</option>
                     ))}
@@ -155,21 +193,28 @@ export default function Incursion() {
 
                   {/* ARTIFICES */}
                   <select
+                    value={
+                      item?.type === 'craftsman'
+                        ? (isAllCraftsmans(item.slug) ? ALL_CRAFTSMANS_SLUG : item.slug)
+                        : ''
+                    }
                     onChange={(e) => {
                       const value = e.target.value
-
-                      if (value === 'all') {
-                        if (craftsmans.length > 0) {
-                          getItem(craftsmans[0].slug, 'craftsmans')
-                        }
-                        return
-                      }
-
+                      if (!value) return
+                      setRegion(null)
+                      setSelectedRegions([])
                       getItem(value, 'craftsmans')
                     }}
-                    className="p-3 bg-white text-black rounded"
+                    className={`p-3 rounded border-2 ${
+                      item?.type === 'craftsman'
+                        ? 'bg-white text-black border-black font-semibold'
+                        : 'bg-white/90 text-black/70 border-transparent'
+                    }`}
                   >
-                    <option value="all">Todos artífices</option>
+                    <option value="" disabled hidden>
+                      Artífices
+                    </option>
+                    <option value={ALL_CRAFTSMANS_SLUG}>Todos os artífices</option>
                     {craftsmans.map(c => (
                       <option key={c.slug} value={c.slug}>{c.name}</option>
                     ))}
